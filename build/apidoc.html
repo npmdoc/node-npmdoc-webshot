@@ -63,6 +63,24 @@
 
         <li>
 
+            <a class="apidocElementLiA" href="#apidoc.element.webshot.webshot">
+            function <span class="apidocSignatureSpan"></span>webshot
+            <span class="apidocSignatureSpan">()</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.webshot.toString">
+            function <span class="apidocSignatureSpan">webshot.</span>toString
+            <span class="apidocSignatureSpan">()</span>
+            </a>
+
+        </li>
+
+        <li>
+
             <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">webshot.</span>options</span>
 
         </li>
@@ -115,10 +133,179 @@
 
     </ol></li>
 
+    <li class="apidocModuleLi"><a href="#apidoc.module.webshot.toString">module webshot.toString</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.webshot.toString.toString">
+            function <span class="apidocSignatureSpan">webshot.</span>toString
+            <span class="apidocSignatureSpan">()</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
 </ol></div>
 
 <div class="apidocSectionDiv">
 <h1><a href="#apidoc.module.webshot" id="apidoc.module.webshot">module webshot</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.webshot.webshot" id="apidoc.element.webshot.webshot">
+        function <span class="apidocSignatureSpan"></span>webshot
+        <span class="apidocSignatureSpan">()</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">webshot = function () {
+
+  // Process arguments
+  var args = Array.prototype.slice.call(arguments, 0);
+  var cb = null;
+  var options = {};
+  var path = null;
+
+<span class="apidocCodeCommentSpan">  /*
+    Possible valid arguments:
+    SITE, &#x3c;OPTIONS&#x3e;, CB
+    SITE, &#x3c;OPTIONS&#x3e;
+    SITE, PATH, &#x3c;OPTIONS&#x3e;, CB
+  */
+</span>  var site = args.shift();
+
+  /*
+    &#x3c;OPTIONS&#x3e;, CB
+    &#x3c;OPTIONS&#x3e;
+    PATH, &#x3c;OPTIONS&#x3e;, CB
+  */
+  var last = args[args.length - 1];
+
+  if (Object.prototype.toString.call(last) == &#x27;[object Function]&#x27;) {
+    cb = args.pop();
+  }
+
+  /*
+    &#x3c;OPTIONS&#x3e;
+    &#x3c;OPTIONS&#x3e;
+    PATH, &#x3c;OPTIONS&#x3e;
+  */
+  switch (args.length) {
+
+    case 1:
+      var arg = args.pop();
+
+      if (toString.call(arg) === &#x27;[object String]&#x27;) {
+        path = arg;
+      } else {
+        options = arg;
+      }
+    break;
+
+    case 2:
+      path = args.shift();
+      options = args.shift();
+    break;
+  }
+
+  var streaming = !path;
+  var defaults = optUtils.mergeObjects(optUtils.caller, optUtils.phantom);
+
+  // Apply the compiled phantomjs path only if it compiled successfully
+  try {
+    defaults.phantomPath = require(&#x27;phantomjs-prebuilt&#x27;).path;
+  } catch (ex) {}
+
+  options = processOptions(options, defaults);
+
+  // Check that a valid fileType was given for the output image
+  var extension = (path)
+    ? path.substring(~(~path.lastIndexOf(&#x27;.&#x27;) || ~path.length) + 1)
+    : options.streamType;
+
+  if (!~extensions.indexOf(extension.toLowerCase())) {
+    return cb(
+      new Error(&#x27;All files must end with one of the following extensions: &#x27;
+        + extensions.join(&#x27;, &#x27;)));
+  }
+
+  // Check that a valid siteType was provided
+  if (!~siteTypes.indexOf(options.siteType)) {
+    var err = new Error(args.siteType + &#x27; is not a valid sitetype.&#x27;);
+    if (cb) return cb(err);
+    throw err;
+  }
+
+  // Add protocol to the site url if not present
+  if (options.siteType === &#x27;url&#x27;) {
+    site = url.parse(site).protocol ? site : &#x27;http://&#x27; + site;
+  }
+
+  // Remove the given file if it already exists, then call phantom
+  var spawn = function() {
+    if (options.siteType === &#x27;html&#x27;) {
+      var obj = tmp.fileSync();
+      var tmpPath = obj.name;
+      fs.writeSync(obj.fd, site, null, &#x27;utf-8&#x27;);
+      fs.close(obj.fd);
+      options.siteType = &#x27;file&#x27;;
+      site = tmpPath;
+      return spawn();
+    } else {
+      return spawnPhantom(site, path, streaming, options, cb);
+    }
+  };
+
+  if (path) {
+    fs.exists(path, function(exists) {
+      if (exists) {
+        fs.unlink(path, function(err) {
+          if (err) return cb(err);
+          return spawn();
+        });
+      } else {
+        return spawn();
+      }
+    });
+  } else {
+    return spawn();
+  }
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.webshot.toString" id="apidoc.element.webshot.toString">
+        function <span class="apidocSignatureSpan">webshot.</span>toString
+        <span class="apidocSignatureSpan">()</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">toString = function () {
+    return text;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var webshot = require(&#x27;webshot&#x27;);
+var fs      = require(&#x27;fs&#x27;);
+
+var renderStream = webshot(&#x27;google.com&#x27;);
+var file = fs.createWriteStream(&#x27;google.png&#x27;, {encoding: &#x27;binary&#x27;});
+
+renderStream.on(&#x27;data&#x27;, function(data) {
+  file.write(data.<span class="apidocCodeKeywordSpan">toString</span>(&#x27;binary&#x27;), &#x27;binary&#x27;);
+});
+```
+
+An example showing how to take a screenshot of a site&#x27;s mobile version:
+
+```javascript
+var webshot = require(&#x27;webshot&#x27;);
+...</pre></li>
+    </ul>
+
 
 
 
@@ -182,6 +369,40 @@
 
 
 
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.webshot.toString" id="apidoc.module.webshot.toString">module webshot.toString</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.webshot.toString.toString" id="apidoc.element.webshot.toString.toString">
+        function <span class="apidocSignatureSpan">webshot.</span>toString
+        <span class="apidocSignatureSpan">()</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function toString() { [native code] }</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var webshot = require(&#x27;webshot&#x27;);
+var fs      = require(&#x27;fs&#x27;);
+
+var renderStream = webshot(&#x27;google.com&#x27;);
+var file = fs.createWriteStream(&#x27;google.png&#x27;, {encoding: &#x27;binary&#x27;});
+
+renderStream.on(&#x27;data&#x27;, function(data) {
+  file.write(data.<span class="apidocCodeKeywordSpan">toString</span>(&#x27;binary&#x27;), &#x27;binary&#x27;);
+});
+```
+
+An example showing how to take a screenshot of a site&#x27;s mobile version:
+
+```javascript
+var webshot = require(&#x27;webshot&#x27;);
+...</pre></li>
+    </ul>
 
 
 </div>

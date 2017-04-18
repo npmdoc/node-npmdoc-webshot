@@ -1,4 +1,4 @@
-<div class="apidocDiv">
+<html><head></head><body><div class="apidocDiv">
 <style>
 /*csslint
 */
@@ -47,17 +47,10 @@
 }
 </style>
 <h1>api documentation for
-    <a
-
-        href="https://github.com/brenden/node-webshot"
-
-    >webshot (v0.18.0)</a>
+    <a href="https://github.com/brenden/node-webshot">webshot (v0.18.0)</a>
 </h1>
 <h4>Easy website screenshots</h4>
-<div class="apidocSectionDiv"><a
-    href="#apidoc.tableOfContents"
-    id="apidoc.tableOfContents"
-><h1>table of contents</h1></a><ol>
+<div class="apidocSectionDiv"><a href="#apidoc.tableOfContents" id="apidoc.tableOfContents"><h1>table of contents</h1></a><ol>
 
     <li class="apidocModuleLi"><a href="#apidoc.module.webshot">module webshot</a><ol>
 
@@ -169,34 +162,34 @@
 
 <span class="apidocCodeCommentSpan">  /*
     Possible valid arguments:
-    SITE, &#x3c;OPTIONS&#x3e;, CB
-    SITE, &#x3c;OPTIONS&#x3e;
-    SITE, PATH, &#x3c;OPTIONS&#x3e;, CB
+    SITE, &lt;OPTIONS&gt;, CB
+    SITE, &lt;OPTIONS&gt;
+    SITE, PATH, &lt;OPTIONS&gt;, CB
   */
 </span>  var site = args.shift();
 
   /*
-    &#x3c;OPTIONS&#x3e;, CB
-    &#x3c;OPTIONS&#x3e;
-    PATH, &#x3c;OPTIONS&#x3e;, CB
+    &lt;OPTIONS&gt;, CB
+    &lt;OPTIONS&gt;
+    PATH, &lt;OPTIONS&gt;, CB
   */
   var last = args[args.length - 1];
 
-  if (Object.prototype.toString.call(last) == &#x27;[object Function]&#x27;) {
+  if (Object.prototype.toString.call(last) == '[object Function]') {
     cb = args.pop();
   }
 
   /*
-    &#x3c;OPTIONS&#x3e;
-    &#x3c;OPTIONS&#x3e;
-    PATH, &#x3c;OPTIONS&#x3e;
+    &lt;OPTIONS&gt;
+    &lt;OPTIONS&gt;
+    PATH, &lt;OPTIONS&gt;
   */
   switch (args.length) {
 
     case 1:
       var arg = args.pop();
 
-      if (toString.call(arg) === &#x27;[object String]&#x27;) {
+      if (toString.call(arg) === '[object String]') {
         path = arg;
       } else {
         options = arg;
@@ -214,42 +207,42 @@
 
   // Apply the compiled phantomjs path only if it compiled successfully
   try {
-    defaults.phantomPath = require(&#x27;phantomjs-prebuilt&#x27;).path;
+    defaults.phantomPath = require('phantomjs-prebuilt').path;
   } catch (ex) {}
 
   options = processOptions(options, defaults);
 
   // Check that a valid fileType was given for the output image
   var extension = (path)
-    ? path.substring(~(~path.lastIndexOf(&#x27;.&#x27;) || ~path.length) + 1)
+    ? path.substring(~(~path.lastIndexOf('.') || ~path.length) + 1)
     : options.streamType;
 
   if (!~extensions.indexOf(extension.toLowerCase())) {
     return cb(
-      new Error(&#x27;All files must end with one of the following extensions: &#x27;
-        + extensions.join(&#x27;, &#x27;)));
+      new Error('All files must end with one of the following extensions: '
+        + extensions.join(', ')));
   }
 
   // Check that a valid siteType was provided
   if (!~siteTypes.indexOf(options.siteType)) {
-    var err = new Error(args.siteType + &#x27; is not a valid sitetype.&#x27;);
+    var err = new Error(args.siteType + ' is not a valid sitetype.');
     if (cb) return cb(err);
     throw err;
   }
 
   // Add protocol to the site url if not present
-  if (options.siteType === &#x27;url&#x27;) {
-    site = url.parse(site).protocol ? site : &#x27;http://&#x27; + site;
+  if (options.siteType === 'url') {
+    site = url.parse(site).protocol ? site : 'http://' + site;
   }
 
   // Remove the given file if it already exists, then call phantom
   var spawn = function() {
-    if (options.siteType === &#x27;html&#x27;) {
+    if (options.siteType === 'html') {
       var obj = tmp.fileSync();
       var tmpPath = obj.name;
-      fs.writeSync(obj.fd, site, null, &#x27;utf-8&#x27;);
+      fs.writeSync(obj.fd, site, null, 'utf-8');
       fs.close(obj.fd);
-      options.siteType = &#x27;file&#x27;;
+      options.siteType = 'file';
       site = tmpPath;
       return spawn();
     } else {
@@ -288,21 +281,21 @@
     return text;
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">...
-var webshot = require(&#x27;webshot&#x27;);
-var fs      = require(&#x27;fs&#x27;);
+var webshot = require('webshot');
+var fs      = require('fs');
 
-var renderStream = webshot(&#x27;google.com&#x27;);
-var file = fs.createWriteStream(&#x27;google.png&#x27;, {encoding: &#x27;binary&#x27;});
+var renderStream = webshot('google.com');
+var file = fs.createWriteStream('google.png', {encoding: 'binary'});
 
-renderStream.on(&#x27;data&#x27;, function(data) {
-  file.write(data.<span class="apidocCodeKeywordSpan">toString</span>(&#x27;binary&#x27;), &#x27;binary&#x27;);
+renderStream.on('data', function(data) {
+  file.write(data.<span class="apidocCodeKeywordSpan">toString</span>('binary'), 'binary');
 });
 ```
 
-An example showing how to take a screenshot of a site&#x27;s mobile version:
+An example showing how to take a screenshot of a site's mobile version:
 
 ```javascript
-var webshot = require(&#x27;webshot&#x27;);
+var webshot = require('webshot');
 ...</pre></li>
     </ul>
 
@@ -347,7 +340,7 @@ var webshot = require(&#x27;webshot&#x27;);
   var merged = {};
 
   Object.keys(a).forEach(function(key) {
-    merged[key] = toString.call(a[key]) === &#x27;[object Object]&#x27;
+    merged[key] = toString.call(a[key]) === '[object Object]'
       ? mergeObjects(a[key], b[key] || {})
       : a[key] || b[key];
   });
@@ -386,21 +379,21 @@ var webshot = require(&#x27;webshot&#x27;);
     <ul>
     <li>description and source-code<pre class="apidocCodePre">function toString() { [native code] }</pre></li>
     <li>example usage<pre class="apidocCodePre">...
-var webshot = require(&#x27;webshot&#x27;);
-var fs      = require(&#x27;fs&#x27;);
+var webshot = require('webshot');
+var fs      = require('fs');
 
-var renderStream = webshot(&#x27;google.com&#x27;);
-var file = fs.createWriteStream(&#x27;google.png&#x27;, {encoding: &#x27;binary&#x27;});
+var renderStream = webshot('google.com');
+var file = fs.createWriteStream('google.png', {encoding: 'binary'});
 
-renderStream.on(&#x27;data&#x27;, function(data) {
-  file.write(data.<span class="apidocCodeKeywordSpan">toString</span>(&#x27;binary&#x27;), &#x27;binary&#x27;);
+renderStream.on('data', function(data) {
+  file.write(data.<span class="apidocCodeKeywordSpan">toString</span>('binary'), 'binary');
 });
 ```
 
-An example showing how to take a screenshot of a site&#x27;s mobile version:
+An example showing how to take a screenshot of a site's mobile version:
 
 ```javascript
-var webshot = require(&#x27;webshot&#x27;);
+var webshot = require('webshot');
 ...</pre></li>
     </ul>
 
@@ -413,3 +406,4 @@ var webshot = require(&#x27;webshot&#x27;);
     ]
 </div>
 </div>
+</body></html>
