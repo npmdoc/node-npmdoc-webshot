@@ -65,15 +65,6 @@
 
         <li>
 
-            <a class="apidocElementLiA" href="#apidoc.element.webshot.toString">
-            function <span class="apidocSignatureSpan">webshot.</span>toString
-            <span class="apidocSignatureSpan">()</span>
-            </a>
-
-        </li>
-
-        <li>
-
             <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">webshot.</span>options</span>
 
         </li>
@@ -121,19 +112,6 @@
         <li>
 
             <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">webshot.options.</span>phantomPage</span>
-
-        </li>
-
-    </ol></li>
-
-    <li class="apidocModuleLi"><a href="#apidoc.module.webshot.toString">module webshot.toString</a><ol>
-
-        <li>
-
-            <a class="apidocElementLiA" href="#apidoc.element.webshot.toString.toString">
-            function <span class="apidocSignatureSpan">webshot.</span>toString
-            <span class="apidocSignatureSpan">()</span>
-            </a>
 
         </li>
 
@@ -270,37 +248,6 @@
 
 
 
-    <h2>
-        <a href="#apidoc.element.webshot.toString" id="apidoc.element.webshot.toString">
-        function <span class="apidocSignatureSpan">webshot.</span>toString
-        <span class="apidocSignatureSpan">()</span>
-        </a>
-    </h2>
-    <ul>
-    <li>description and source-code<pre class="apidocCodePre">toString = function () {
-    return text;
-}</pre></li>
-    <li>example usage<pre class="apidocCodePre">...
-var webshot = require('webshot');
-var fs      = require('fs');
-
-var renderStream = webshot('google.com');
-var file = fs.createWriteStream('google.png', {encoding: 'binary'});
-
-renderStream.on('data', function(data) {
-  file.write(data.<span class="apidocCodeKeywordSpan">toString</span>('binary'), 'binary');
-});
-```
-
-An example showing how to take a screenshot of a site's mobile version:
-
-```javascript
-var webshot = require('webshot');
-...</pre></li>
-    </ul>
-
-
-
 
 </div>
 
@@ -324,7 +271,23 @@ var webshot = require('webshot');
 
   return filtered;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+ * @param (Boolean) streaming
+ * @param (Object) options
+ * @param (Function) cb
+ */
+function spawnPhantom(site, path, streaming, options, cb) {
+
+// Filter out options that shouldn't be passed to the phantom process
+var filteredOptions = optUtils.<span class="apidocCodeKeywordSpan">filterObject</span>(options,
+  Object.keys(optUtils.phantom)
+    .concat(optUtils.phantomPage)
+    .concat(optUtils.phantomCallback));
+
+filteredOptions.site = site;
+filteredOptions.path = path;
+filteredOptions.streaming = streaming;
+...</pre></li>
     </ul>
 
 
@@ -352,50 +315,32 @@ var webshot = require('webshot');
 
   return merged;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
-    </ul>
-
-
-
-
-
-
-
-
-
-
-</div>
-
-<div class="apidocSectionDiv">
-<h1><a href="#apidoc.module.webshot.toString" id="apidoc.module.webshot.toString">module webshot.toString</a></h1>
-
-
-    <h2>
-        <a href="#apidoc.element.webshot.toString.toString" id="apidoc.element.webshot.toString.toString">
-        function <span class="apidocSignatureSpan">webshot.</span>toString
-        <span class="apidocSignatureSpan">()</span>
-        </a>
-    </h2>
-    <ul>
-    <li>description and source-code<pre class="apidocCodePre">function toString() { [native code] }</pre></li>
     <li>example usage<pre class="apidocCodePre">...
-var webshot = require('webshot');
-var fs      = require('fs');
+  case 2:
+    path = args.shift();
+    options = args.shift();
+  break;
+}
 
-var renderStream = webshot('google.com');
-var file = fs.createWriteStream('google.png', {encoding: 'binary'});
+var streaming = !path;
+var defaults = optUtils.<span class="apidocCodeKeywordSpan">mergeObjects</span>(optUtils.caller, optUtils.phantom);
 
-renderStream.on('data', function(data) {
-  file.write(data.<span class="apidocCodeKeywordSpan">toString</span>('binary'), 'binary');
-});
-```
+// Apply the compiled phantomjs path only if it compiled successfully
+try {
+  defaults.phantomPath = require('phantomjs-prebuilt').path;
+} catch (ex) {}
 
-An example showing how to take a screenshot of a site's mobile version:
-
-```javascript
-var webshot = require('webshot');
+options = processOptions(options, defaults);
 ...</pre></li>
     </ul>
+
+
+
+
+
+
+
+
 
 
 </div>
