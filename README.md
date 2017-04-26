@@ -1,6 +1,6 @@
 # npmdoc-webshot
 
-#### api documentation for  [webshot (v0.18.0)](https://github.com/brenden/node-webshot)  [![npm package](https://img.shields.io/npm/v/npmdoc-webshot.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-webshot) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-webshot.svg)](https://travis-ci.org/npmdoc/node-npmdoc-webshot)
+#### basic api documentation for  [webshot (v0.18.0)](https://github.com/brenden/node-webshot)  [![npm package](https://img.shields.io/npm/v/npmdoc-webshot.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-webshot) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-webshot.svg)](https://travis-ci.org/npmdoc/node-npmdoc-webshot)
 
 #### Easy website screenshots
 
@@ -78,7 +78,8 @@
     "scripts": {
         "test": "mocha --ui bdd --reporter spec --require should ./test/core.js ./test/options/*"
     },
-    "version": "0.18.0"
+    "version": "0.18.0",
+    "bin": {}
 }
 ```
 
